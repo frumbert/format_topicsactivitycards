@@ -177,6 +177,7 @@ class course_renderer extends \core_course_renderer {
 
         $template->text = $mod->get_formatted_content(array('overflowdiv' => false, 'noclean' => true));
         $template->completion = $this->course_section_cm_completion($course, $completioninfo, $mod, $displayoptions);
+        // $template->completion = $this->output->activity_information($mod, $completioninfo, $activitydates);
         $template->cmname = $this->course_section_cm_name($mod, $displayoptions);
         $template->editing = $PAGE->user_is_editing();
         $template->availability = $this->course_section_cm_availability($mod, $displayoptions);
@@ -220,7 +221,7 @@ class course_renderer extends \core_course_renderer {
         global $DB;
 
         $fs = get_file_storage();
-
+        if (empty($contextids)) return [];
         list($contextidsql, $params) = $DB->get_in_or_equal($contextids, SQL_PARAMS_NAMED);
         $params['filearea'] = $filearea;
         $params['component'] = $component;
