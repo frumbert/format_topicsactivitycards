@@ -21,3 +21,13 @@ body#page-course-view-topicsactivitycards div.activityinfo {
 .format-topicsactivitycards li.section.main div.card-deck{
     margin-right: 0;
 }
+
+body#page-course-view-topicsactivitycards .editing .section .activity .editing_move {
+    position: unset;
+    left: 0;
+    top: 0;
+}
+
+body#page-course-view-topicsactivitycards.pagelayout-course .section .activity .editing_move {
+    left: unset;
+}
