@@ -28,11 +28,6 @@
         {{#cmname}}
             <div class="cmname">
                 <div class="float-left">{{{cmname}}}</div>
-                {{#completion}}
-                    <div class="float-right completion">
-                        {{{completion}}}
-                    </div>
-                {{/completion}}
             </div>
         {{/cmname}}
         <div class="activityinfo">
@@ -58,6 +53,11 @@
     </div>
     {{#showfooter}}
         <div class="card-footer">
+            {{#completion}}
+                <span class="completion">
+                    {{{completion}}}
+                </span>
+            {{/completion}}
             {{#duration}}
                 <span class="duration">
                     {{{duration}}}

@@ -160,7 +160,7 @@ class course_renderer extends \core_course_renderer {
      */
     public function course_section_cm($course, &$completioninfo, cm_info $mod, $sectionreturn,
             $displayoptions = array()) {
-        global $OUTPUT, $PAGE;
+        global $OUTPUT, $PAGE, $USER;
 
         $unstyledmodules = ['label'];
 
@@ -175,9 +175,22 @@ class course_renderer extends \core_course_renderer {
             $template->unstyled = true;
         }
 
+        // Fetch activity dates.
+        $activitydates = [];
+        if ($course->showactivitydates) {
+            $activitydates = \core\activity_dates::get_dates_for_module($mod, $USER->id);
+        }
+
+        // Fetch completion details.
+        $showcompletionconditions = $course->showcompletionconditions == COMPLETION_SHOW_CONDITIONS;
+        $completiondetails = \core_completion\cm_completion_details::get_instance($mod, $USER->id, $showcompletionconditions);
+        $ismanualcompletion = $completiondetails->has_completion() && !$completiondetails->is_automatic();
+
         $template->text = $mod->get_formatted_content(array('overflowdiv' => false, 'noclean' => true));
-        $template->completion = $this->course_section_cm_completion($course, $completioninfo, $mod, $displayoptions);
-        // $template->completion = $this->output->activity_information($mod, $completioninfo, $activitydates);
+        // $template->completion = $this->course_section_cm_completion($course, $completioninfo, $mod, $displayoptions);
+        $template->showcompletion = ($showcompletionconditions || $ismanualcompletion || $activitydates);
+        $template->completion = $this->output->activity_information($mod, $completiondetails, $activitydates);
+
         $template->cmname = $this->course_section_cm_name($mod, $displayoptions);
         $template->editing = $PAGE->user_is_editing();
         $template->availability = $this->course_section_cm_availability($mod, $displayoptions);
@@ -212,7 +225,7 @@ class course_renderer extends \core_course_renderer {
         }
 
         $template->showheader = (!empty($template->editing) || !empty($template->cardimage));
-        $template->showfooter = (!empty($template->availability) || !empty($template->duration));
+        $template->showfooter = (!empty($template->completion) || !empty($template->availability) || !empty($template->duration));
 
         return $this->render_from_template('format_topicsactivitycards/coursemodule', $template);
     }
