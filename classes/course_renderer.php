@@ -187,7 +187,7 @@ class course_renderer extends \core_course_renderer {
         $ismanualcompletion = $completiondetails->has_completion() && !$completiondetails->is_automatic();
 
         $template->text = $mod->get_formatted_content(array('overflowdiv' => false, 'noclean' => true));
-        // $template->completion = $this->course_section_cm_completion($course, $completioninfo, $mod, $displayoptions);
+
         $template->showcompletion = ($showcompletionconditions || $ismanualcompletion || $activitydates);
         $template->completion = $this->output->activity_information($mod, $completiondetails, $activitydates);
 
@@ -234,7 +234,7 @@ class course_renderer extends \core_course_renderer {
         global $DB;
 
         $fs = get_file_storage();
-        if (empty($contextids)) return [];
+        if (empty($contextids)) return []; // no topics; nothing to do
         list($contextidsql, $params) = $DB->get_in_or_equal($contextids, SQL_PARAMS_NAMED);
         $params['filearea'] = $filearea;
         $params['component'] = $component;
